@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="WalletDiary helps you track personal expenses and stay on top of your spending." />
+    <title>WalletDiary</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand-block">
+          <div class="brand-mark" aria-label="WalletDiary logo">
+            <svg viewBox="0 0 80 80" aria-hidden="true" focusable="false">
+              <path d="M14 28c0-7.7 6.3-14 14-14h24c7.7 0 14 6.3 14 14v18c0 9.9-8.1 18-18 18H32c-9.9 0-18-8.1-18-18V28z" />
+              <path d="M24 28h32c0-5.5-4.5-10-10-10H34c-5.5 0-10 4.5-10 10z" class="wallet-top" />
+              <path d="M24 40.5h32" class="wallet-line" />
+              <path d="M46 54c0-4.4-3.6-8-8-8s-8 3.6-8 8v.5h16v-.5z" class="wallet-coin" />
+              <circle cx="58" cy="24" r="10" class="wallet-badge" />
+              <path d="M54 24l3 3 6-7" class="wallet-check" />
+            </svg>
+          </div>
+          <div class="brand-copy">
+            <h1>WalletDiary</h1>
+            <p>Personal Expense Tracking</p>
+          </div>
+        </div>
+
+        <nav class="nav" aria-label="Main navigation">
+          <button class="nav-btn active" data-section="dashboard" type="button">
+            <span class="nav-icon">◎</span>
+            Overview
+          </button>
+          <button class="nav-btn" data-section="view-expenses" type="button">
+            <span class="nav-icon">▣</span>
+            Transactions
+          </button>
+          <button class="nav-btn" data-section="add-expense" type="button">
+            <span class="nav-icon">＋</span>
+            Add Expense
+          </button>
+          <button class="nav-btn" data-section="search-expense" type="button">
+            <span class="nav-icon">⌕</span>
+            Search
+          </button>
+          <button class="nav-btn" data-section="summary" type="button">
+            <span class="nav-icon">◔</span>
+            Analytics
+          </button>
+        </nav>
+
+        <div class="sidebar-footer">Your spending, simplified.</div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">WalletDiary</p>
+            <h2 id="pageTitle">Overview</h2>
+          </div>
+          <button class="primary-btn" id="topAddExpenseBtn" type="button" data-section-target="add-expense">+ Add Expense</button>
+        </header>
+
+        <section id="dashboard" class="page-section active">
+          <div class="hero-grid">
+            <div class="hero-copy">
+              <p class="kicker">Good evening 👋</p>
+              <h3>Your money at a glance</h3>
+              <p>Track your spending and stay in control.</p>
+              <button class="primary-btn hero-action" type="button" data-section-target="add-expense">Add Expense</button>
+            </div>
+
+            <div class="hero-card">
+              <div class="hero-card-header">
+                <span>Total spending</span>
+                <span class="chip">This month</span>
+              </div>
+              <div class="hero-card-number" id="heroTotalSpending">₹ 0.00</div>
+              <div class="trend-line" aria-hidden="true">
+                <span></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Total Expenses</div>
+              <div class="stat-value" id="dashboardTotalExpenses">0</div>
+              <div class="stat-meta">Record count</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Total Amount</div>
+              <div class="stat-value" id="dashboardTotalAmount">₹ 0.00</div>
+              <div class="stat-meta">Everything tracked</div>
+            </div>
+            <div class="stat-card accent-card">
+              <div class="stat-label">Average Expense</div>
+              <div class="stat-value" id="dashboardAverageExpense">₹ 0.00</div>
+              <div class="stat-meta">Per transaction</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Top Category</div>
+              <div class="stat-value category-tag" id="dashboardTopCategory">—</div>
+              <div class="stat-meta">Largest spend</div>
+            </div>
+          </div>
+
+          <div class="content-grid two-up">
+            <div class="panel analytics-panel">
+              <div class="panel-header">
+                <h3>Spending by Category</h3>
+              </div>
+              <div class="chart-layout">
+                <div class="donut-chart" id="categoryChart">
+                  <div class="donut-center">
+                    <strong id="categoryLargestValue">₹ 0.00</strong>
+                    <span>top category</span>
+                  </div>
+                </div>
+                <div class="legend-list" id="categoryLegend"></div>
+              </div>
+            </div>
+
+            <div class="panel activity-panel">
+              <div class="panel-header">
+                <h3>Recent Activity</h3>
+              </div>
+              <ul id="recentActivityList" class="activity-list"></ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="add-expense" class="page-section">
+          <div class="section-header premium-header">
+            <div>
+              <p class="eyebrow">Quick entry</p>
+              <h3>Add a new expense</h3>
+            </div>
+            <p>Keep your spending diary up to date.</p>
+          </div>
+
+          <div class="panel form-panel premium-form-panel">
+            <form id="addExpenseForm" novalidate>
+              <div class="amount-box">
+                <label for="amount">Amount</label>
+                <div class="amount-field-wrap">
+                  <span class="currency-prefix">₹</span>
+                  <input id="amount" name="amount" type="number" min="0.01" step="0.01" placeholder="0.00" required />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <label for="category">Category</label>
+                <select id="category" name="category" required>
+                  <option value="">Select category</option>
+                  <option>Food</option>
+                  <option>Travel</option>
+                  <option>Shopping</option>
+                  <option>Education</option>
+                  <option>Bills</option>
+                  <option>Other</option>
+                </select>
+              </div>
+
+              <div class="form-row">
+                <label for="description">Description</label>
+                <input id="description" name="description" type="text" placeholder="Short description" />
+              </div>
+
+              <div class="form-row">
+                <label for="date">Expense Date</label>
+                <input id="date" name="expenseDate" type="date" required />
+              </div>
+
+              <div class="button-row">
+                <button type="submit" class="primary-btn" id="addExpenseBtn">Save Expense</button>
+              </div>
+              <div id="addExpenseMessage" class="status-message"></div>
+            </form>
+          </div>
+        </section>
+
+        <section id="view-expenses" class="page-section">
+          <div class="section-header premium-header">
+            <div>
+              <p class="eyebrow">Your ledger</p>
+              <h3>Transactions</h3>
+            </div>
+            <p>Everything you've spent, in one place.</p>
+          </div>
+
+          <div class="panel table-panel">
+            <div id="expensesTableStatus" class="status-message"></div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Amount</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="expenseTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="search-expense" class="page-section">
+          <div class="section-header premium-header">
+            <div>
+              <p class="eyebrow">Find records</p>
+              <h3>Search Expense</h3>
+            </div>
+            <p>Search by category or description.</p>
+          </div>
+
+          <div class="panel search-panel">
+            <div class="search-controls">
+              <div class="search-input-wrap">
+                <span class="search-icon">⌕</span>
+                <input id="searchCategory" type="text" placeholder="Search expenses by category or description..." />
+              </div>
+              <button id="searchExpenseBtn" type="button" class="primary-btn">Search</button>
+              <button id="clearSearchBtn" type="button" class="secondary-btn">Clear</button>
+            </div>
+
+            <div id="searchResults" class="search-result">
+              <p>Search results will appear here.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="summary" class="page-section">
+          <div class="section-header premium-header">
+            <div>
+              <p class="eyebrow">Performance</p>
+              <h3>Expense Summary</h3>
+            </div>
+            <p>Real numbers from your expense data.</p>
+          </div>
+
+          <div class="summary-grid">
+            <div class="summary-card">
+              <span>Total spending</span>
+              <strong id="summaryTotalAmount">₹ 0.00</strong>
+            </div>
+            <div class="summary-card">
+              <span>Transactions</span>
+              <strong id="summaryTotalExpenses">0</strong>
+            </div>
+            <div class="summary-card">
+              <span>Average expense</span>
+              <strong id="summaryAverageExpense">₹ 0.00</strong>
+            </div>
+            <div class="summary-card">
+              <span>Top category</span>
+              <strong id="summaryTopCategory">—</strong>
+            </div>
+          </div>
+
+          <div class="content-grid two-up summary-layout">
+            <div class="panel analytics-panel">
+              <div class="panel-header">
+                <h3>Category Distribution</h3>
+              </div>
+              <div class="chart-layout">
+                <div class="donut-chart summary-chart" id="summaryCategoryChart">
+                  <div class="donut-center">
+                    <strong id="summaryLargestValue">₹ 0.00</strong>
+                    <span>largest category</span>
+                  </div>
+                </div>
+                <div class="legend-list" id="summaryCategoryLegend"></div>
+              </div>
+            </div>
+
+            <div class="panel activity-panel">
+              <div class="panel-header">
+                <h3>Recent Expenses</h3>
+              </div>
+              <ul id="summaryRecentList" class="activity-list"></ul>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <nav class="mobile-nav" aria-label="Mobile navigation">
+      <button class="mobile-nav-btn active" type="button" data-section="dashboard">Overview</button>
+      <button class="mobile-nav-btn" type="button" data-section="view-expenses">Transactions</button>
+      <button class="mobile-nav-btn" type="button" data-section="add-expense">Add</button>
+      <button class="mobile-nav-btn" type="button" data-section="search-expense">Search</button>
+      <button class="mobile-nav-btn" type="button" data-section="summary">Analytics</button>
+    </nav>
+
+    <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+    <div id="editExpenseModal" class="modal hidden" aria-hidden="true">
+      <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="editExpenseTitle">
+        <div class="modal-header">
+          <h3 id="editExpenseTitle">Edit Expense</h3>
+          <button type="button" id="closeEditModalBtn" class="close-btn" aria-label="Close edit form">×</button>
+        </div>
+
+        <form id="editExpenseForm" class="edit-form" novalidate>
+          <input type="hidden" id="editExpenseId" />
+
+          <div class="form-row">
+            <label for="editAmount">Amount</label>
+            <input id="editAmount" name="editAmount" type="number" min="0.01" step="0.01" required />
+          </div>
+
+          <div class="form-row">
+            <label for="editCategory">Category</label>
+            <input id="editCategory" name="editCategory" type="text" required />
+          </div>
+
+          <div class="form-row">
+            <label for="editDescription">Description</label>
+            <input id="editDescription" name="editDescription" type="text" />
+          </div>
+
+          <div class="form-row">
+            <label for="editDate">Expense Date</label>
+            <input id="editDate" name="editDate" type="date" required />
+          </div>
+
+          <div class="button-row">
+            <button type="submit" class="primary-btn">Save Changes</button>
+            <button type="button" id="cancelEditBtn" class="secondary-btn">Cancel</button>
+          </div>
+
+          <div id="editExpenseMessage" class="status-message"></div>
+        </form>
+      </div>
+    </div>
+
+    <script src="js/script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+target/
+*.class
+.idea/
+.vscode/
+*.log
+.env
+src/main/resources/db/db.properties
+mysql-connector-j-8.0.33.jar
+src/main/resources/db.properties
